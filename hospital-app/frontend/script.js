@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (window.location.pathname.includes('dashboard.html')) {
         loadPatients();
+        loadStats();
         setupInteractivity();
     }
 
@@ -37,6 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+async function loadStats() {
+    try {
+        const res = await fetch('http://localhost:5000/api/stats');
+        const stats = await res.json();
+        document.getElementById('stat-patients').innerText = stats.patients;
+        document.getElementById('stat-doctors').innerText = stats.doctors;
+        document.getElementById('stat-appointments').innerText = stats.appointments;
+        document.getElementById('stat-inventory').innerText = stats.inventory;
+    } catch (err) {
+        console.error('Error loading stats:', err);
+    }
+}
 
 async function loadPatients() {
     const token = localStorage.getItem('token');

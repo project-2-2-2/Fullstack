@@ -8,8 +8,9 @@
 </head>
 <body>
     <nav>
-        <div class="brand">Hospital App</div>
+        <div class="brand">City Hospital</div>
         <div class="nav-links">
+            <a href="home.html">Home</a>
             <a href="dashboard.html">Patients</a>
             <a href="doctors.html">Doctors</a>
             <a href="appointments.html">Appointments</a>
@@ -21,6 +22,26 @@
         <div id="moving-text-container">
             <div id="moving-text">EMERGENCY ALERT: Check latest patient records!</div>
         </div>
+
+        <div class="grid" id="stats-grid">
+            <div class="card">
+                <h3>Total Patients</h3>
+                <p id="stat-patients">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Active Doctors</h3>
+                <p id="stat-doctors">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Total Appointments</h3>
+                <p id="stat-appointments">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Inventory Items</h3>
+                <p id="stat-inventory">Loading...</p>
+            </div>
+        </div>
+
         <div class="card">
             <button id="change-bg-btn" style="width: auto;">Change Theme Color</button>
             <h2 id="form-title">Register Patient</h2>
