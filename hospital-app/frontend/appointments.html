@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management - Appointments</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="brand">Hospital App</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Patients</a>
+            <a href="doctors.html">Doctors</a>
+            <a href="appointments.html">Appointments</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Schedule Appointment</h2>
+            <form id="appointment-form">
+                <label>Patient</label>
+                <select id="a-patient" required></select>
+                <label>Doctor</label>
+                <select id="a-doctor" required></select>
+                <label>Date</label>
+                <input type="date" id="a-date" required>
+                <label>Time</label>
+                <input type="time" id="a-time" required>
+                <label>Reason</label>
+                <input type="text" id="a-reason" placeholder="Reason for visit" required>
+                <button type="submit">Schedule</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Appointments</h2>
+            <table id="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointments-body">
+                    <!-- Table rows populated via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPatients();
+            loadDoctors();
+            loadAppointments();
+            document.getElementById('appointment-form').addEventListener('submit', handleAppointmentForm);
+        });
+
+        async function loadPatients() {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('http://localhost:5000/api/patients', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const patients = await res.json();
+                const select = document.getElementById('a-patient');
+                select.innerHTML = '<option value="">Select Patient</option>';
+                patients.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p._id;
+                    opt.innerText = p.name;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error('Error loading patients:', err);
+            }
+        }
+
+        async function loadDoctors() {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('http://localhost:5000/api/doctors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const doctors = await res.json();
+                const select = document.getElementById('a-doctor');
+                select.innerHTML = '<option value="">Select Doctor</option>';
+                doctors.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d._id;
+                    opt.innerText = d.name;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error('Error loading doctors:', err);
+            }
+        }
+
+        async function loadAppointments() {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('http://localhost:5000/api/appointments', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const appointments = await res.json();
+                const tbody = document.getElementById('appointments-body');
+                tbody.innerHTML = '';
+                appointments.forEach(a => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${a.patient ? a.patient.name : 'Unknown'}</td>
+                        <td>${a.doctor ? a.doctor.name : 'Unknown'}</td>
+                        <td>${a.date}</td>
+                        <td>${a.time}</td>
+                        <td>${a.reason}</td>
+                        <td>${a.status}</td>
+                        <td class="action-btns">
+                            <button class="edit-btn" onclick="updateStatus('${a._id}', 'Completed')">Complete</button>
+                            <button class="delete-btn" onclick="deleteAppointment('${a._id}')">Cancel</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Error loading appointments:', err);
+            }
+        }
+
+        async function handleAppointmentForm(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const patient = document.getElementById('a-patient').value;
+            const doctor = document.getElementById('a-doctor').value;
+            const date = document.getElementById('a-date').value;
+            const time = document.getElementById('a-time').value;
+            const reason = document.getElementById('a-reason').value;
+
+            try {
+                const res = await fetch('http://localhost:5000/api/appointments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ patient, doctor, date, time, reason })
+                });
+                const data = await res.json();
+                if (data._id) {
+                    document.getElementById('appointment-form').reset();
+                    loadAppointments();
+                }
+            } catch (err) {
+                console.error('Error handling appointment form:', err);
+            }
+        }
+
+        async function updateStatus(id, status) {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`http://localhost:5000/api/appointments/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (data._id) {
+                    loadAppointments();
+                }
+            } catch (err) {
+                console.error('Error updating status:', err);
+            }
+        }
+
+        async function deleteAppointment(id) {
+            if (!confirm('Are you sure you want to cancel this appointment?')) return;
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`http://localhost:5000/api/appointments/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.msg) {
+                    loadAppointments();
+                }
+            } catch (err) {
+                console.error('Error deleting appointment:', err);
+            }
+        }
+    </script>
+</body>
+</html>

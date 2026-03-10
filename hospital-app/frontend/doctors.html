@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management - Doctors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <div class="brand">Hospital App</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Patients</a>
+            <a href="doctors.html">Doctors</a>
+            <a href="appointments.html">Appointments</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="#" id="logout-btn">Logout</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2 id="form-title">Manage Doctors</h2>
+            <form id="doctor-form">
+                <input type="hidden" id="doctor-id">
+                <label>Name</label>
+                <input type="text" id="d-name" placeholder="Doctor Name" required>
+                <label>Specialization</label>
+                <input type="text" id="d-specialization" placeholder="Specialization" required>
+                <label>Experience (Years)</label>
+                <input type="number" id="d-experience" placeholder="Years of Experience" required>
+                <label>Contact</label>
+                <input type="text" id="d-contact" placeholder="Contact Number" required>
+                <button type="submit" id="submit-btn">Add Doctor</button>
+                <button type="button" id="cancel-edit-btn" class="hidden">Cancel Edit</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Doctor List</h2>
+            <table id="doctors-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Specialization</th>
+                        <th>Experience</th>
+                        <th>Contact</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="doctors-body">
+                    <!-- Table rows populated via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDoctors();
+            document.getElementById('doctor-form').addEventListener('submit', handleDoctorForm);
+            document.getElementById('cancel-edit-btn').addEventListener('click', () => {
+                document.getElementById('doctor-form').reset();
+                document.getElementById('doctor-id').value = '';
+                document.getElementById('form-title').innerText = 'Manage Doctors';
+                document.getElementById('submit-btn').innerText = 'Add Doctor';
+                document.getElementById('cancel-edit-btn').classList.add('hidden');
+            });
+        });
+
+        async function loadDoctors() {
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch('http://localhost:5000/api/doctors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const doctors = await res.json();
+                const tbody = document.getElementById('doctors-body');
+                tbody.innerHTML = '';
+                doctors.forEach(d => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${d.name}</td>
+                        <td>${d.specialization}</td>
+                        <td>${d.experience}</td>
+                        <td>${d.contact}</td>
+                        <td class="action-btns">
+                            <button class="edit-btn" onclick="editDoctor('${d._id}', '${d.name}', '${d.specialization}', ${d.experience}, '${d.contact}')">Edit</button>
+                            <button class="delete-btn" onclick="deleteDoctor('${d._id}')">Delete</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Error loading doctors:', err);
+            }
+        }
+
+        async function handleDoctorForm(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const id = document.getElementById('doctor-id').value;
+            const name = document.getElementById('d-name').value;
+            const specialization = document.getElementById('d-specialization').value;
+            const experience = document.getElementById('d-experience').value;
+            const contact = document.getElementById('d-contact').value;
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `http://localhost:5000/api/doctors/${id}` : 'http://localhost:5000/api/doctors';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name, specialization, experience, contact })
+                });
+                const data = await res.json();
+                if (data._id || data.msg) {
+                    document.getElementById('doctor-form').reset();
+                    document.getElementById('doctor-id').value = '';
+                    document.getElementById('form-title').innerText = 'Manage Doctors';
+                    document.getElementById('submit-btn').innerText = 'Add Doctor';
+                    document.getElementById('cancel-edit-btn').classList.add('hidden');
+                    loadDoctors();
+                }
+            } catch (err) {
+                console.error('Error handling doctor form:', err);
+            }
+        }
+
+        function editDoctor(id, name, specialization, experience, contact) {
+            document.getElementById('doctor-id').value = id;
+            document.getElementById('d-name').value = name;
+            document.getElementById('d-specialization').value = specialization;
+            document.getElementById('d-experience').value = experience;
+            document.getElementById('d-contact').value = contact;
+
+            document.getElementById('form-title').innerText = 'Edit Doctor';
+            document.getElementById('submit-btn').innerText = 'Update Doctor';
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+        }
+
+        async function deleteDoctor(id) {
+            if (!confirm('Are you sure you want to delete this doctor?')) return;
+            const token = localStorage.getItem('token');
+            try {
+                const res = await fetch(`http://localhost:5000/api/doctors/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.msg) {
+                    loadDoctors();
+                }
+            } catch (err) {
+                console.error('Error deleting doctor:', err);
+            }
+        }
+    </script>
+</body>
+</html>
