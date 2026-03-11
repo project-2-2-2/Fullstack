@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+<h2>Dashboard</h2>
+</nav>
+
+<div class="container">
+
+<h3>Add Student</h3>
+
+<input id="sname" placeholder="Student Name">
+<input id="semail" placeholder="Email">
+<input id="scourse" placeholder="Course">
+
+<button onclick="addStudent()">Add</button>
+
+<h3>Student List</h3>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Course</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentTable"></tbody>
+
+</table>
+
+<h3>Feedback</h3>
+
+<input id="fname" placeholder="Your Name">
+<input id="fmsg" placeholder="Message">
+
+<button onclick="addFeedback()">Submit</button>
+
+<ul id="feedbackList"></ul>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
