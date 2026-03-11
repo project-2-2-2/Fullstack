@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1 style="color: #2c3e50; margin-bottom: 2rem;">Dashboard</h1>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-title">Total Users</div>
+        <div class="card-value" id="total-users">0</div>
+        <div class="card-footer">Active users in system</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Posts</div>
+        <div class="card-value" id="total-posts">0</div>
+        <div class="card-footer">Published and draft posts</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">My Posts</div>
+        <div class="card-value" id="my-posts">0</div>
+        <div class="card-footer">Posts you created</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Views</div>
+        <div class="card-value" id="total-views">0</div>
+        <div class="card-footer">All post views combined</div>
+      </div>
+    </div>
+
+    <h2 style="color: #2c3e50; margin-top: 2rem; margin-bottom: 1rem;">Quick Actions</h2>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="users.html" class="btn btn-primary">Manage Users</a>
+      <a href="posts.html" class="btn btn-primary">Manage Posts</a>
+      <a href="products.html" class="btn btn-primary">Manage Products</a>
+      <a href="tasks.html" class="btn btn-primary">My Tasks</a>
+      <a href="reports.html" class="btn btn-secondary">Reports (iframe)</a>
+      <a href="profile.html" class="btn btn-secondary">View Profile</a>
+      <a href="index.html" class="btn btn-secondary">View Home</a>
+    </div>
+
+    <h2 style="color: #2c3e50; margin-top: 2rem; margin-bottom: 1rem;">Recent Posts</h2>
+    <div id="recent-posts" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      <p>Loading posts...</p>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    const loadDashboardData = async () => {
+      try {
+        showLoader();
+
+        const currentUser = getCurrentUser();
+
+        // Load all users (admin-only)
+        if (currentUser && currentUser.role === 'admin') {
+          const usersResponse = await apiUsers.getAll();
+          if (usersResponse.success) {
+            document.getElementById('total-users').textContent = usersResponse.count;
+          }
+        } else {
+          document.getElementById('total-users').textContent = '—';
+          const footer = document.querySelector('#total-users')?.parentElement?.querySelector('.card-footer');
+          if (footer) footer.textContent = 'Admin-only metric';
+        }
+
+        // Load all posts
+        const postsResponse = await apiPosts.getAll();
+        if (postsResponse.success) {
+          document.getElementById('total-posts').textContent = postsResponse.count;
+
+          // Calculate total views and my posts
+          let myPostsCount = 0;
+          let totalViews = 0;
+
+          postsResponse.posts.forEach(post => {
+            totalViews += post.views;
+            if (post.author._id === currentUser.id) {
+              myPostsCount++;
+            }
+          });
+
+          document.getElementById('total-views').textContent = totalViews;
+          document.getElementById('my-posts').textContent = myPostsCount;
+
+          // Display recent posts
+          const recentPostsContainer = document.getElementById('recent-posts');
+          recentPostsContainer.innerHTML = '';
+
+          const recentPosts = postsResponse.posts.slice(0, 3);
+          if (recentPosts.length === 0) {
+            recentPostsContainer.innerHTML = '<p>No posts available yet.</p>';
+          } else {
+            recentPosts.forEach(post => {
+              const card = createPostCard(post);
+              recentPostsContainer.appendChild(card);
+            });
+          }
+        }
+
+        hideLoader();
+      } catch (error) {
+        showAlert('Error loading dashboard: ' + error.message, 'danger');
+        hideLoader();
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      protectRoute();
+      loadDashboardData();
+    });
+  </script>
+</body>
+</html>
+

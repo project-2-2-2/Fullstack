@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <div class="container">
+    <h1 style="color: #2c3e50; margin-bottom: 1rem;">About</h1>
+
+    <div class="card" style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+      <img src="assets/logo.svg" alt="Logo" style="max-width: 360px; width: 100%; height: auto; border-radius: 6px;">
+      <div style="flex: 1; min-width: 260px;">
+        <p style="line-height: 1.8; color: #555;">
+          This is a reusable boilerplate for building full-stack web apps using
+          <strong>HTML/CSS/JS (no frameworks)</strong> on the frontend and
+          <strong>Node.js + Express + MongoDB</strong> on the backend.
+        </p>
+        <p style="line-height: 1.8; color: #555; margin-top: 0.75rem;">
+          It includes authentication, protected pages, CRUD tables, forms, and a reports page that uses an iframe.
+        </p>
+        <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <a class="btn btn-primary" href="index.html">Home</a>
+          <a class="btn btn-secondary" href="reports.html">Reports</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="card-title" style="font-size: 1.2rem;">Frontend JavaScript demo</div>
+      <div style="margin-top: 0.75rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <button class="btn btn-primary" id="pulse-btn">Pulse background</button>
+        <div id="pulse-target" style="padding: 0.75rem 1rem; background: white; border: 1px solid #ecf0f1; border-radius: 6px;">
+          Watch me change
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('pulse-btn');
+      const target = document.getElementById('pulse-target');
+      if (!btn || !target) return;
+
+      let on = false;
+      btn.addEventListener('click', () => {
+        on = !on;
+        target.style.backgroundColor = on ? '#d1ecf1' : 'white';
+        target.style.borderColor = on ? '#3498db' : '#ecf0f1';
+        target.textContent = on ? 'Blue mode' : 'Normal mode';
+      });
+    });
+  </script>
+</body>
+</html>
+

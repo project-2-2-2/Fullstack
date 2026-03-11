@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <div class="container">
+    <h1 style="color: #2c3e50; margin-bottom: 1rem;">Reports</h1>
+    <p style="color: #555; margin-bottom: 1rem; line-height: 1.6;">
+      This page demonstrates <strong>frames</strong> using an iframe. The widget below is a separate HTML page.
+    </p>
+
+    <div class="card">
+      <div class="card-title" style="font-size: 1.2rem;">Live Widget (iframe)</div>
+      <div style="margin-top: 1rem;">
+        <iframe
+          title="Mini dashboard widget"
+          src="widgets/mini-dashboard.html"
+          style="width: 100%; height: 320px; border: 1px solid #ecf0f1; border-radius: 6px; background: white;">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      protectRoute();
+    });
+  </script>
+</body>
+</html>
+

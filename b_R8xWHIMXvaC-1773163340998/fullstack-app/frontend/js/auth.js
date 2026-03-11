@@ -47,13 +47,13 @@ const registerUser = async (name, email, password) => {
 const logoutUser = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-  window.location.href = '/frontend/login.html';
+  window.location.href = 'login.html';
 };
 
 // Protect routes
 const protectRoute = () => {
   if (!isAuthenticated()) {
-    window.location.href = '/frontend/login.html';
+    window.location.href = 'login.html';
   }
 };
 

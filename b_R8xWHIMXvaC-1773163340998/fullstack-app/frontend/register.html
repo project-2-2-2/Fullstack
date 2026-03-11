@@ -43,7 +43,7 @@
       </form>
 
       <p style="margin-top: 1.5rem; text-align: center;">
-        Already have an account? <a href="/frontend/login.html" style="color: #3498db; text-decoration: none;">Login here</a>
+        Already have an account? <a href="login.html" style="color: #3498db; text-decoration: none;">Login here</a>
       </p>
     </div>
   </div>
@@ -88,7 +88,7 @@
       if (result.success) {
         showAlert('Registration successful! Redirecting...', 'success');
         setTimeout(() => {
-          window.location.href = '/frontend/dashboard.html';
+          window.location.href = 'dashboard.html';
         }, 1500);
       } else {
         showAlert(result.message, 'danger');

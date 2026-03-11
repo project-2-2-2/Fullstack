@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 1rem; background: #fff; color: #2c3e50; }
+    .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .box { border: 1px solid #ecf0f1; border-radius: 8px; padding: 1rem; min-width: 220px; flex: 1; }
+    .value { font-size: 2rem; font-weight: bold; color: #3498db; }
+    canvas { width: 100%; height: 120px; border: 1px solid #ecf0f1; border-radius: 8px; }
+    .hint { color: #7f8c8d; font-size: 0.9rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="box">
+      <div>Local time</div>
+      <div class="value" id="clock">--:--:--</div>
+      <div class="hint">Updates every second</div>
+    </div>
+    <div class="box">
+      <div>Moving dot</div>
+      <canvas id="c" width="600" height="160"></canvas>
+      <div class="hint">Vanilla JS canvas animation</div>
+    </div>
+  </div>
+
+  <script>
+    const clockEl = document.getElementById('clock');
+    const pad = (n) => String(n).padStart(2, '0');
+    setInterval(() => {
+      const d = new Date();
+      clockEl.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }, 1000);
+
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    let t = 0;
+    function draw() {
+      t += 0.02;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f5f5f5';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const x = (Math.sin(t) * 0.45 + 0.5) * canvas.width;
+      const y = (Math.cos(t * 1.4) * 0.35 + 0.5) * canvas.height;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, Math.PI * 2);
+      ctx.fillStyle = '#e74c3c';
+      ctx.fill();
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
+

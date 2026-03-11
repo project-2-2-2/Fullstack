@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <div class="container">
+    <h1 style="color: #2c3e50; margin-bottom: 2rem;">Products</h1>
+
+    <div style="margin-bottom: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button onclick="openCreateProductModal()" class="btn btn-success">Add Product</button>
+      <input type="text" id="product-search" placeholder="Search products..."
+             style="flex: 1; min-width: 200px; padding: 0.75rem; border: 1px solid #bdc3c7; border-radius: 4px;">
+      <button onclick="searchProducts()" class="btn btn-primary">Search</button>
+      <select id="stock-filter" onchange="filterProductsByStock()" style="padding: 0.75rem; border: 1px solid #bdc3c7; border-radius: 4px;">
+        <option value="">All</option>
+        <option value="true">In Stock</option>
+        <option value="false">Out of Stock</option>
+      </select>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>SKU</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Created By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="products-tbody">
+          <tr><td colspan="8" style="text-align: center;">Loading products...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="product-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 2rem;">
+    <div style="background-color: white; padding: 2rem; border-radius: 4px; max-width: 600px; margin: 0 auto;">
+      <h2 id="product-modal-title" style="margin-bottom: 1.5rem; color: #2c3e50;">Add Product</h2>
+
+      <form id="product-form" onsubmit="saveProduct(event)">
+        <div class="form-group">
+          <label for="product-name">Name:</label>
+          <input type="text" id="product-name" required>
+        </div>
+        <div class="form-group">
+          <label for="product-sku">SKU:</label>
+          <input type="text" id="product-sku">
+        </div>
+        <div class="form-group">
+          <label for="product-category">Category:</label>
+          <input type="text" id="product-category" placeholder="general">
+        </div>
+        <div class="form-group">
+          <label for="product-price">Price:</label>
+          <input type="text" id="product-price" placeholder="0">
+        </div>
+        <div class="form-group">
+          <label for="product-stock">In Stock:</label>
+          <select id="product-stock">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="product-notes">Notes:</label>
+          <textarea id="product-notes" style="min-height: 80px;"></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 1;">Save</button>
+          <button type="button" class="btn btn-secondary" onclick="closeProductModal()" style="flex: 1;">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script src="products.js"></script>
+</body>
+</html>
+

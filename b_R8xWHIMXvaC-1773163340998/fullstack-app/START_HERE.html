@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Start Full-Stack App</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f7f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        a {
+            display: inline-block;
+            padding: 15px 35px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background-color: #28a745;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Full-Stack Boilerplate</h1>
+        <p style="max-width: 520px; line-height: 1.6;">
+            1) Open a terminal in <code>fullstack-app/backend</code><br>
+            2) Run <code>npm install</code><br>
+            3) Add your MongoDB string in <code>backend/.env</code><br>
+            4) Run <code>npm run dev</code><br><br>
+            Then open the app in your browser.
+        </p>
+        <a href="http://localhost:5002" target="_blank">Open http://localhost:5002</a>
+    </div>
+</body>
+</html>

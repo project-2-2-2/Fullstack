@@ -13,11 +13,11 @@ const authMiddleware = require('../middleware/auth');
 const router = express.Router();
 
 router.get('/', getAllPosts);
+router.get('/user/:userId', getUserPosts);
+router.put('/:id/like', likePost);
 router.get('/:id', getPost);
 router.post('/', authMiddleware, createPost);
 router.put('/:id', authMiddleware, updatePost);
 router.delete('/:id', authMiddleware, deletePost);
-router.get('/user/:userId', getUserPosts);
-router.put('/:id/like', likePost);
 
 module.exports = router;

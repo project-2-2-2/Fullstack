@@ -1,14 +1,19 @@
 let posts = [];
 let currentEditPostId = null;
+let currentPage = 1;
+let totalPages = 1;
+const postsPerPage = 10;
 
-// Load all posts
+// Load posts with pagination
 const loadPosts = async () => {
   showLoader();
   try {
-    const response = await apiPosts.getAll();
+    const response = await apiPosts.getAll(`page=${currentPage}&limit=${postsPerPage}`);
     if (response.success) {
       posts = response.posts;
+      totalPages = response.totalPages;
       displayPosts();
+      updatePaginationControls();
     } else {
       showAlert(response.message || 'Failed to load posts', 'danger');
     }
@@ -31,6 +36,33 @@ const displayPosts = () => {
     const row = createPostRow(post, currentUser.id);
     tbody.appendChild(row);
   });
+};
+
+// Update pagination controls
+const updatePaginationControls = () => {
+  const pageInfo = document.getElementById('page-info');
+  const prevButton = document.getElementById('prev-page');
+  const nextButton = document.getElementById('next-page');
+
+  if (pageInfo) pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  if (prevButton) prevButton.disabled = currentPage === 1;
+  if (nextButton) nextButton.disabled = currentPage === totalPages;
+};
+
+// Go to next page
+const nextPage = () => {
+  if (currentPage < totalPages) {
+    currentPage++;
+    loadPosts();
+  }
+};
+
+// Go to previous page
+const previousPage = () => {
+  if (currentPage > 1) {
+    currentPage--;
+    loadPosts();
+  }
 };
 
 // Open create post modal

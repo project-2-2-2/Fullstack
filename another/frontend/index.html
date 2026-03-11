@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="hero">
+      <h1>Welcome to Full Stack App</h1>
+      <p>A complete web application with user management, authentication, and content management</p>
+      <a href="dashboard.html" class="btn btn-primary" style="display: inline-block; margin-top: 1rem;">Go to Dashboard</a>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+      <img src="assets/banner.svg" alt="Banner" style="width: 100%; border-radius: 6px; display: block;">
+    </div>
+
+    <h2>Featured Posts</h2>
+    <div class="featured-posts" id="featured-posts">
+      <p>Loading posts...</p>
+    </div>
+
+    <div style="margin-top: 3rem; padding: 2rem; background-color: white; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <h2>App Features</h2>
+      <ul style="line-height: 2;">
+        <li>User Authentication with JWT</li>
+        <li>User Management System</li>
+        <li>Post Creation and Management</li>
+        <li>Products CRUD (inventory-style)</li>
+        <li>Tasks CRUD (personal todo-style)</li>
+        <li>Reports page using an iframe (frames)</li>
+        <li>User Profiles with bio</li>
+        <li>Protected Routes</li>
+        <li>Data Tables with CRUD Operations</li>
+        <li>Simple and Clean UI</li>
+        <li>Responsive Design</li>
+      </ul>
+    </div>
+
+    <div style="margin-top: 2rem; text-align: center; color: #7f8c8d;">
+      <p>Click on the items below to see JavaScript features:</p>
+      <div class="color-change" style="cursor: pointer;">Click me to change color</div>
+      <div style="margin-top: 2rem;">
+        <p>This box moves when the page loads (click to pause/resume):</p>
+        <div class="moving-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    // Load featured posts on home page
+    const loadFeaturedPosts = async () => {
+      try {
+        const response = await apiPosts.getAll();
+        if (response.success) {
+          const container = document.getElementById('featured-posts');
+          container.innerHTML = '';
+
+          const featured = response.posts.slice(0, 3);
+          if (featured.length === 0) {
+            container.innerHTML = '<p>No posts available yet.</p>';
+            return;
+          }
+
+          featured.forEach(post => {
+            const card = createPostCard(post);
+            container.appendChild(card);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading posts:', error);
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadFeaturedPosts();
+    });
+  </script>
+</body>
+</html>
+

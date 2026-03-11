@@ -128,6 +128,12 @@ const searchUsers = () => {
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
   protectRoute();
+  const currentUser = getCurrentUser();
+  if (!currentUser || currentUser.role !== 'admin') {
+    showAlert('Admins only: Users page', 'danger');
+    setTimeout(() => (window.location.href = 'dashboard.html'), 1200);
+    return;
+  }
   loadUsers();
 
   // Close modal when clicking outside

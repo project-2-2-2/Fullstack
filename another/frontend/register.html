@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Full Stack App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">Full Stack App</div>
+    <div class="navbar-menu" id="navbar-menu"></div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="form-container">
+      <h1 style="margin-bottom: 2rem; text-align: center; color: #2c3e50;">Register</h1>
+
+      <form id="register-form">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password:</label>
+          <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Register</button>
+      </form>
+
+      <p style="margin-top: 1.5rem; text-align: center;">
+        Already have an account? <a href="login.html" style="color: #3498db; text-decoration: none;">Login here</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="auth.js"></script>
+  <script src="ui.js"></script>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (!name || !email || !password || !confirmPassword) {
+        showAlert('Please fill in all fields', 'danger');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAlert('Passwords do not match', 'danger');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert('Password must be at least 6 characters', 'danger');
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        showAlert('Please enter a valid email address', 'danger');
+        return;
+      }
+
+      showLoader();
+      const result = await registerUser(name, email, password);
+      hideLoader();
+
+      if (result.success) {
+        showAlert('Registration successful! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } else {
+        showAlert(result.message, 'danger');
+      }
+    });
+  </script>
+</body>
+</html>
+

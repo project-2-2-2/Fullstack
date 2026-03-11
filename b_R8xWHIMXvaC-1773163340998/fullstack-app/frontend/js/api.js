@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+// Same-origin API (works in dev + when deployed behind one domain)
+const API_BASE_URL = '/api';
 
 // Get token from localStorage
 const getToken = () => localStorage.getItem('token');
@@ -84,8 +85,9 @@ const apiUsers = {
 
 // API calls for Posts
 const apiPosts = {
-  getAll: async () => {
-    const response = await fetch(`${API_BASE_URL}/posts`, {
+  getAll: async (query = '') => {
+    const url = query ? `${API_BASE_URL}/posts?${query}` : `${API_BASE_URL}/posts`;
+    const response = await fetch(url, {
       method: 'GET',
       headers: getHeaders()
     });
@@ -137,6 +139,97 @@ const apiPosts = {
   like: async (id) => {
     const response = await fetch(`${API_BASE_URL}/posts/${id}/like`, {
       method: 'PUT',
+      headers: getHeaders()
+    });
+    return response.json();
+  }
+};
+
+// API calls for Products
+const apiProducts = {
+  getAll: async () => {
+    const response = await fetch(`${API_BASE_URL}/products`, {
+      method: 'GET',
+      headers: getHeaders()
+    });
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: 'GET',
+      headers: getHeaders()
+    });
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/products`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  update: async (id, data) => {
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: 'DELETE',
+      headers: getHeaders()
+    });
+    return response.json();
+  }
+};
+
+// API calls for Tasks
+const apiTasks = {
+  getAll: async (query = '') => {
+    const url = query ? `${API_BASE_URL}/tasks?${query}` : `${API_BASE_URL}/tasks`;
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: getHeaders()
+    });
+    return response.json();
+  },
+
+  getById: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+      method: 'GET',
+      headers: getHeaders()
+    });
+    return response.json();
+  },
+
+  create: async (data) => {
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  update: async (id, data) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  delete: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+      method: 'DELETE',
       headers: getHeaders()
     });
     return response.json();

@@ -7,13 +7,14 @@ const {
   getUserByEmail
 } = require('../controllers/userController');
 const authMiddleware = require('../middleware/auth');
+const requireRole = require('../middleware/requireRole');
 
 const router = express.Router();
 
-router.get('/', getAllUsers);
-router.get('/:id', getUser);
+router.get('/', authMiddleware, requireRole('admin'), getAllUsers);
+router.get('/email/:email', authMiddleware, requireRole('admin'), getUserByEmail);
+router.get('/:id', authMiddleware, getUser);
 router.put('/:id', authMiddleware, updateUser);
 router.delete('/:id', authMiddleware, deleteUser);
-router.get('/email/:email', getUserByEmail);
 
 module.exports = router;

@@ -33,7 +33,7 @@
       </form>
 
       <p style="margin-top: 1.5rem; text-align: center;">
-        Don't have an account? <a href="/frontend/register.html" style="color: #3498db; text-decoration: none;">Register here</a>
+        Don't have an account? <a href="register.html" style="color: #3498db; text-decoration: none;">Register here</a>
       </p>
 
       <div style="margin-top: 2rem; padding: 1rem; background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; color: #0c5460;">
@@ -66,7 +66,7 @@
       if (result.success) {
         showAlert('Login successful! Redirecting...', 'success');
         setTimeout(() => {
-          window.location.href = '/frontend/dashboard.html';
+          window.location.href = 'dashboard.html';
         }, 1500);
       } else {
         showAlert(result.message, 'danger');

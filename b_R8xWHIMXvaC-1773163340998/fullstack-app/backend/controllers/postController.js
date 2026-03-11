@@ -4,14 +4,25 @@ const User = require('../models/User');
 // Get all posts
 exports.getAllPosts = async (req, res, next) => {
   try {
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalPosts = await Post.countDocuments();
+    const totalPages = Math.ceil(totalPosts / limit);
+
     const posts = await Post.find()
       .populate('author', 'name email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
 
     res.json({
       success: true,
       count: posts.length,
-      posts
+      posts,
+      page,
+      totalPages
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

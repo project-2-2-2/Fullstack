@@ -8,19 +8,25 @@ const updateNavbar = () => {
   navbarMenu.innerHTML = '';
 
   if (isAuthenticated()) {
+    const isAdmin = user && user.role === 'admin';
     navbarMenu.innerHTML = `
-      <a href="/frontend/index.html">Home</a>
-      <a href="/frontend/dashboard.html">Dashboard</a>
-      <a href="/frontend/users.html">Users</a>
-      <a href="/frontend/posts.html">Posts</a>
-      <a href="/frontend/profile.html">Profile</a>
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      ${isAdmin ? `<a href="users.html">Users</a>` : ''}
+      <a href="posts.html">Posts</a>
+      <a href="products.html">Products</a>
+      <a href="tasks.html">Tasks</a>
+      <a href="reports.html">Reports</a>
+      <a href="profile.html">Profile</a>
+      <a href="about.html">About</a>
       <button class="logout-btn" onclick="logoutUser()">Logout</button>
     `;
   } else {
     navbarMenu.innerHTML = `
-      <a href="/frontend/index.html">Home</a>
-      <a href="/frontend/login.html">Login</a>
-      <a href="/frontend/register.html">Register</a>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
     `;
   }
 };
