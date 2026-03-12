@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="index.css" />
+    <title>Document</title>
+</head>
+<body>
+    <form onSubmit="event.preventDefault(); getSignup(this.username.value, this.password.value)">
+        <label>Username</label>
+        <input name="username" type="text"/>
+        <label>Password</label>
+        <input name="password" type="password" minlength="8" maxlength="20" required/>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
